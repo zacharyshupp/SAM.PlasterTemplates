@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<plasterManifest schemaVersion="1.1" templateType="Project"
+  xmlns="http://www.microsoft.com/schemas/PowerShell/Plaster/v1">
+  <metadata>
+    <name>SAM-ModuleTemplate</name>
+    <id>8fefcfd0-9c8f-470e-a723-d95d78fc1438</id>
+    <version>1.0.0</version>
+    <title>SAM-ModuleTemplate</title>
+    <description>PowerShell Module for SAM.</description>
+    <author>Zachary Shupp</author>
+    <tags></tags>
+  </metadata>
+  <parameters>
+    <parameter name='ModuleName' type='text' prompt='Enter the name of the module'/>
+    <parameter name='ModuleDescription' type='text' prompt='Enter a description of the module'/>
+  </parameters>
+  <content>
+
+    <!--Create Project Structure-->
+    <file source="" destination="Build" condition='${PLASTER_PARAM_ModuleType} -match "SimpleModuleWithBuild|GithubModuleWithActions"'/>
+    <file source="" destination="Docs" />
+    <file source="" destination="$PLASTER_PARAM_ModuleName" />
+
+    <!-- Git -->
+    <file source="template/git/gitignore.txt" destination=".gitignore"/>
+    <file source="template/git/gitattributes.txt" destination=".gitattributes" />
+    <templateFile source="template/git/GitReleaseManager.yaml" destination="GitReleaseManager.yaml" />
+    <file source="template/git/GitVersion.yml" destination="GitVersion.yml" />
+
+    <!--License-->
+    <templateFile source="template/license/MIT.txt" destination="LICENSE"/>
+
+    <!--IDE-->
+    <file source="template/vscode/extensions.json" destination=".vscode/extensions.json"/>
+    <file source="template/vscode/settings.json" destination=".vscode/settings.json"/>
+    <file source="template/vscode/powershell.code-snippets" destination=".vscode/powershell.code-snippets"/>
+
+    <!--Base Module-->
+    <file source="template/basemodule/Private/Set-TextTest.ps1" destination="${PLASTER_PARAM_ModuleName}/Private/Set-TextTest.ps1" />
+    <file source="template/basemodule/Public/Get-Function.ps1" destination="${PLASTER_PARAM_ModuleName}/Public/Get-Function.ps1" />
+    <file source="template/basemodule/Public/Test-Function.ps1" destination="${PLASTER_PARAM_ModuleName}/Public/Test-Function.ps1" />
+    <templateFile source="template/basemodule/PSModule.psm1" destination="${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}.psm1" />
+    <file source="template/basemodule/PSModule.Variables.ps1" destination="${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}.Variables.ps1" />
+    <newModuleManifest destination='${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}.psd1'
+        moduleVersion='0.1.0'
+        author='Zachary Shupp'
+        description='$PLASTER_PARAM_ModuleDescription'
+        rootModule='$PLASTER_PARAM_ModuleName.psm1'
+    />
+
+    <!--Module Test-->
+    <file source="template/Tests/_module.tests.ps1" destination="Tests/_module.tests.ps1"/>
+    <file source="template/Tests/help.tests.ps1" destination="Tests/help.tests.ps1"/>
+
+    <!--GitHub-->
+    <file source="template/github/pull_request_template.md" destination=".github/pull_request_template.md"/>
+    <templateFile source="template/github/workflows/ci-main.yml" destination=".github/workflows/ci-main.yml"/>
+    <file source="template/github/ISSUE_TEMPLATE/bug_report.md" destination=".github/ISSUE_TEMPLATE/bug_report.md"/>
+    <file source="template/github/ISSUE_TEMPLATE/feature_request.md" destination=".github/ISSUE_TEMPLATE/feature_request.md"/>
+    <file source="template/github/contributing.md" destination="Docs/contributing.md"/>
+
+    <!--Build Setup-->
+    <file source="template/Build/build.functions.ps1" destination="Build/build.functions.ps1"/>
+    <file source="template/Build/build.tasks.ps1" destination="Build/build.tasks.ps1"/>
+    <file source="template/Build/PSScriptAnalyzerSettings.psd1" destination="Build/PSScriptAnalyzerSettings.psd1"/>
+    <file source="template/DotNet/dotnet-tools.json" destination=".config/dotnet-tools.json"/>
+    <templateFile source="template/Build/build.ps1" destination="build.ps1"/>
+    <file source="template/Build/Templates/*" destination="Build/Templates"/>
+
+    <!--End Module Creation-->
+    <message nonewline='true'>`n`nPowerShell module project $PLASTER_PARAM_ModuleName has been created`n`n</message>
+
+  </content>
+</plasterManifest>
